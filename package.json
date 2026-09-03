@@ -1,11 +1,17 @@
 {
-  "name": "mcp-tester",
+  "name": "mcp-cross-test",
   "version": "0.1.0",
   "description": "Cross-client automated testing tool for Model Context Protocol (MCP) servers",
   "main": "dist/index.js",
   "bin": {
-    "mcp-tester": "dist/cli.js"
+    "mcp-cross-test": "dist/cli.js",
+    "mcptest": "dist/cli.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "type": "module",
   "scripts": {
     "build": "tsc",

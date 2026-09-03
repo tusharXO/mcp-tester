@@ -1,0 +1,9 @@
+.agents/
+src/
+tests/
+examples/
+.git/
+.gitignore
+tsconfig.json
+vitest.config.ts
+*.log
