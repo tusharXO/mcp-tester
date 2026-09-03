@@ -1,0 +1,19 @@
+name: "OrderLookup MCP Server SSE Test Suite"
+
+server:
+  transport: "sse"
+  url: "http://localhost:3888/sse"
+
+clients:
+  - claude
+  - cursor
+  - chatgpt
+
+tests:
+  - name: "User asks about order status over SSE"
+    user_message: "where's my order 4521?"
+    expect_tool_call: "lookup_order"
+    expect_arguments:
+      order_id: 4521
+    expect_result:
+      status: "shipped"

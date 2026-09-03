@@ -1,0 +1,44 @@
+{
+  "name": "mcp-tester",
+  "version": "0.1.0",
+  "description": "Cross-client automated testing tool for Model Context Protocol (MCP) servers",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-tester": "dist/cli.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "tsx src/cli.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "example:stdio": "tsx src/cli.ts run examples/order-test.yaml",
+    "example:sse": "tsx src/cli.ts run examples/sse-test.yaml"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "testing",
+    "cross-client",
+    "claude",
+    "cursor",
+    "chatgpt"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
+    "commander": "^13.1.0",
+    "eventsource": "^3.0.5",
+    "picocolors": "^1.1.1",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/eventsource": "^1.1.15",
+    "@types/node": "^22.13.5",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.6"
+  }
+}

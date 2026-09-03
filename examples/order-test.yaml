@@ -1,0 +1,28 @@
+name: "OrderLookup MCP Server Test Suite"
+
+server:
+  transport: "stdio"
+  command: "node"
+  args: ["./node_modules/tsx/dist/cli.mjs", "./examples/dummy-server.ts"]
+
+clients:
+  - claude
+  - cursor
+  - chatgpt
+
+tests:
+  - name: "User asks about order status"
+    user_message: "where's my order 4521?"
+    expect_tool_call: "lookup_order"
+    expect_arguments:
+      order_id: 4521
+    expect_result:
+      status: "shipped"
+
+  - name: "User tracks order shipment"
+    user_message: "track shipment TRK-98765"
+    expect_tool_call: "get_order_tracking"
+    expect_arguments:
+      tracking_number: "TRK-98765"
+    expect_result:
+      status: "in_transit"
