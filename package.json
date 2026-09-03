@@ -1,6 +1,6 @@
 {
   "name": "mcp-cross-test",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cross-client automated testing tool for Model Context Protocol (MCP) servers",
   "main": "dist/index.js",
   "bin": {

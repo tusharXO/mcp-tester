@@ -1,72 +1,72 @@
-# `mcp-cross-test` 🧪
+# mcp-cross-test
 
 [![npm version](https://img.shields.io/npm/v/mcp-cross-test.svg)](https://www.npmjs.com/package/mcp-cross-test)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/tusharXO/mcp-tester/blob/master/LICENSE)
 [![MCP Cross-Client Verified](https://img.shields.io/badge/MCP_Cross--Client-Verified-success)](https://github.com/tusharXO/mcp-tester)
 
-> **Playwright for MCP**: Cross-client automated testing framework for Model Context Protocol servers. Catch client-specific discrepancies across **Claude Desktop**, **Cursor IDE**, and **ChatGPT** before your users do.
+Automated cross-client testing and conformance framework for Model Context Protocol (MCP) servers. Verify server reliability across **Claude Desktop**, **Cursor IDE**, and **ChatGPT** in local workflows and CI/CD pipelines.
 
 ---
 
-## The Problem
+## Overview
 
-MCP ("Model Context Protocol") servers work great in local development, but often break when connected through different host applications:
-- **Claude Desktop** strictly expects typed JSON schema arguments and preserves integer types.
-- **Cursor** indexes schemas strictly, caches tools aggressively, and silently hides tools if the schema format deviates (e.g. missing `type: "object"`).
-- **ChatGPT** function calling frequently coerces numeric IDs to strings (e.g. `"4521"` instead of integer `4521`) or passes nested objects as JSON stringified strings.
+Model Context Protocol (MCP) servers often function reliably in isolated local testing, but fail or behave inconsistently across different host applications:
 
-Without automated cross-client testing, your server might work in Claude Desktop while silently failing in Cursor or throwing unexpected runtime exceptions in ChatGPT.
+- **Claude Desktop**: Strictly enforces schema types and preserves native JSON types (integers, booleans, nested objects).
+- **Cursor IDE**: Requires strict schema indexing rules (e.g., mandatory `type: "object"`). Malformed schemas are silently hidden from the assistant without explicit error logs.
+- **ChatGPT**: Frequently coerces numeric identifiers to string scalars (e.g., passing `"4521"` for an `integer` field) or stringifies nested object payloads.
 
-`mcp-cross-test` automates cross-client testing in CI/CD, running your test suite against simulated client profiles over both **stdio** and **SSE** transports with zero external LLM API costs.
+`mcp-cross-test` runs an automated test matrix simulating each client's specific handshake, capabilities, and LLM argument behavior over both **stdio** and **SSE** transports with zero external LLM API cost.
 
 ---
 
-## Features
+## Key Capabilities
 
-- 🎭 **Cross-Client Simulation Matrix**: Tests servers against behavioral profiles for **Claude Desktop**, **Cursor IDE**, and **ChatGPT**.
-- 🪄 **Auto-Discovery Scaffolding (`init`)**: Connects to your MCP server and automatically scaffolds a test suite from your exposed tools.
-- 🔌 **Dual Transport Support**: Works seamlessly with local process **stdio** and remote/local **SSE** endpoints.
-- 📝 **Declarative YAML Test Suites**: Define tests in clean, human-readable YAML specs.
-- 🚦 **CI/CD Ready**: Playwright-like terminal reporter, JSON output format, and proper exit codes (0 for pass, 1 for fail).
-- ⚡ **Zero External API Costs**: Simulates LLM formatting quirks locally without requiring paid OpenAI or Anthropic API keys.
+- **Cross-Client Matrix**: Runs test suites against verified profiles for Claude Desktop, Cursor, and ChatGPT.
+- **Zero-Token Simulation**: Simulates host handshakes and LLM formatting quirks locally, eliminating external API latency and token billing in CI.
+- **Tool Auto-Discovery (`init`)**: Introspects running or local MCP servers to automatically generate a tailored YAML test specification.
+- **Dual Transport Architecture**: Supports local child processes (`stdio`) and remote endpoints (`sse`).
+- **CI/CD Conformance**: Outputs Playwright-style terminal matrices, structured JSON reports, and standard process exit codes (0 for pass, 1 for fail).
 
 ---
 
 ## Quickstart
 
-### 1. Zero-Config Scaffold (`init`)
+### 1. Scaffold Test Suite (`init`)
 
-Auto-discover tools from your MCP server and generate an `mcp-test.yaml` file:
+Auto-discover exposed tools directly from your server:
 
 ```bash
-# For a Node.js / TypeScript MCP server:
+# Node.js / TypeScript MCP server:
 npx mcp-cross-test init --command "node dist/server.js"
 
-# For a Python MCP server:
+# Python MCP server:
 npx mcp-cross-test init --command "python server.py"
 
-# For an SSE server:
+# Remote / Local SSE server:
 npx mcp-cross-test init --url "http://localhost:3000/sse"
 ```
 
-### 2. Run the Cross-Client Test Matrix
+This generates an `mcp-test.yaml` file pre-populated with your server's tools and input parameters.
+
+### 2. Execute Tests
 
 ```bash
-# Run against all clients (Claude, Cursor, ChatGPT)
+# Run the complete cross-client test matrix:
 npx mcp-cross-test run mcp-test.yaml
 
-# Test only a specific client
+# Filter by a specific client:
 npx mcp-cross-test run mcp-test.yaml --client claude
 
-# Output results as JSON for CI pipelines
+# Output structured JSON for automation:
 npx mcp-cross-test run mcp-test.yaml --json
 ```
 
 ---
 
-## Example Output
+## Diagnostic Output
 
-When a client discrepancy occurs (such as ChatGPT sending `"4521"` instead of integer `4521` to a strict integer-expecting tool):
+When an interoperability discrepancy is detected, `mcp-cross-test` isolates the exact client and failure mode:
 
 ```text
 ============================================================
@@ -95,24 +95,24 @@ Test: User tracks order shipment
 
 ---
 
-## Test Specification Format (`mcp-test.yaml`)
+## Specification Schema (`mcp-test.yaml`)
 
 ```yaml
 name: "Order Lookup MCP Server Test Suite"
 
-# Define how to connect to the MCP server
+# Server execution parameters
 server:
   transport: "stdio"
   command: "node"
   args: ["./dist/server.js"]
 
-# Clients to simulate
+# Target client profiles
 clients:
   - claude
   - cursor
   - chatgpt
 
-# Tests to run
+# Test assertions
 tests:
   - name: "User asks about order status"
     user_message: "where's my order 4521?"
@@ -133,12 +133,12 @@ tests:
 
 ---
 
-## Testing SSE Servers
+## Remote Server Testing (SSE)
 
-To test an MCP server exposed over HTTP/SSE:
+For servers exposed over HTTP/SSE:
 
 ```yaml
-name: "Remote MCP Server Test Suite"
+name: "Remote Staging MCP Test Suite"
 
 server:
   transport: "sse"
@@ -150,7 +150,7 @@ clients:
   - chatgpt
 
 tests:
-  - name: "Query inventory"
+  - name: "Check inventory status"
     expect_tool_call: "query_inventory"
     expect_arguments:
       sku: "KEYBOARD-RGB"
@@ -160,14 +160,18 @@ tests:
 
 ---
 
-## GitHub Actions CI Integration
+## GitHub Actions CI Workflow
 
-Add this workflow to your MCP server repository at `.github/workflows/mcp-test.yml`:
+Add the following workflow file to your MCP repository at `.github/workflows/mcp-test.yml`:
 
 ```yaml
-name: MCP Cross-Client Tests
+name: MCP Cross-Client Conformance
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
 
 jobs:
   test:
@@ -179,11 +183,11 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run build
-      - name: Run MCP Cross-Client Tests
+      - name: Run MCP Conformance Tests
         run: npx mcp-cross-test run mcp-test.yaml
 ```
 
-Add the badge to your MCP server's README:
+To display conformance status on your README:
 ```markdown
 [![MCP Cross-Client Verified](https://img.shields.io/badge/MCP_Cross--Client-Verified-success)](https://github.com/tusharXO/mcp-tester)
 ```
@@ -192,10 +196,10 @@ Add the badge to your MCP server's README:
 
 ## Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) to learn how to add new client profiles (e.g. Zed IDE, LibreChat, Gemini CLI).
+Contributions and new client profile submissions are welcome. Please refer to [CONTRIBUTING.md](https://github.com/tusharXO/mcp-tester/blob/master/CONTRIBUTING.md) for architecture details and profile implementation guidelines.
 
 ---
 
 ## License
 
-[MIT](LICENSE) © 2026 tushar1409
+[MIT](https://github.com/tusharXO/mcp-tester/blob/master/LICENSE) © 2026 tushar1409
