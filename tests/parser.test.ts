@@ -10,7 +10,7 @@ describe('YAML Test Suite Parser', () => {
     expect(suite.name).toBe('OrderLookup MCP Server Test Suite');
     expect(suite.server.transport).toBe('stdio');
     expect(suite.server.command).toBe('node');
-    expect(suite.clients).toEqual(['claude', 'cursor', 'chatgpt']);
+    expect(suite.clients).toEqual(['claude', 'cursor', 'chatgpt', 'antigravity']);
     expect(suite.tests.length).toBe(2);
     expect(suite.tests[0].expect_tool_call).toBe('lookup_order');
     expect(baseDir).toBeDefined();
