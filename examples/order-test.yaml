@@ -9,6 +9,7 @@ clients:
   - claude
   - cursor
   - chatgpt
+  - antigravity
 
 tests:
   - name: "User asks about order status"

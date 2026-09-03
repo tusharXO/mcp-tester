@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/tusharXO/mcp-tester/blob/master/LICENSE)
 [![MCP Cross-Client Verified](https://img.shields.io/badge/MCP_Cross--Client-Verified-success)](https://github.com/tusharXO/mcp-tester)
 
-Automated cross-client testing and conformance framework for Model Context Protocol (MCP) servers. Verify server reliability across **Claude Desktop**, **Cursor IDE**, and **ChatGPT** in local workflows and CI/CD pipelines.
+Automated cross-client testing and conformance framework for Model Context Protocol (MCP) servers. Verify server reliability across **Claude Desktop**, **Cursor IDE**, **ChatGPT**, and **Antigravity IDE** in local workflows and CI/CD pipelines.
 
 ---
 
@@ -15,6 +15,7 @@ Model Context Protocol (MCP) servers often function reliably in isolated local t
 - **Claude Desktop**: Strictly enforces schema types and preserves native JSON types (integers, booleans, nested objects).
 - **Cursor IDE**: Requires strict schema indexing rules (e.g., mandatory `type: "object"`). Malformed schemas are silently hidden from the assistant without explicit error logs.
 - **ChatGPT**: Frequently coerces numeric identifiers to string scalars (e.g., passing `"4521"` for an `integer` field) or stringifies nested object payloads.
+- **Antigravity IDE**: Google DeepMind AI-first agentic IDE with semantic tool routing, lazy-loading negotiation, and agent capability controls.
 
 `mcp-cross-test` runs an automated test matrix simulating each client's specific handshake, capabilities, and LLM argument behavior over both **stdio** and **SSE** transports with zero external LLM API cost.
 
@@ -22,7 +23,7 @@ Model Context Protocol (MCP) servers often function reliably in isolated local t
 
 ## Key Capabilities
 
-- **Cross-Client Matrix**: Runs test suites against verified profiles for Claude Desktop, Cursor, and ChatGPT.
+- **Cross-Client Matrix**: Runs test suites against verified profiles for Claude Desktop, Cursor, ChatGPT, and Antigravity IDE.
 - **Zero-Token Simulation**: Simulates host handshakes and LLM formatting quirks locally, eliminating external API latency and token billing in CI.
 - **Tool Auto-Discovery (`init`)**: Introspects running or local MCP servers to automatically generate a tailored YAML test specification.
 - **Dual Transport Architecture**: Supports local child processes (`stdio`) and remote endpoints (`sse`).
@@ -111,6 +112,7 @@ clients:
   - claude
   - cursor
   - chatgpt
+  - antigravity
 
 # Test assertions
 tests:

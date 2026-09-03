@@ -16,13 +16,13 @@ const program = new Command();
 program
   .name('mcp-cross-test')
   .description('Cross-client automated testing framework for Model Context Protocol (MCP) servers')
-  .version('0.1.1');
+  .version('0.1.2');
 
 program
   .command('run')
   .description('Run an MCP test specification file against simulated clients')
   .argument('<file>', 'Path to YAML test specification file (e.g. mcp-test.yaml)')
-  .option('-c, --client <clients...>', 'Simulate specific client(s): claude, cursor, chatgpt')
+  .option('-c, --client <clients...>', 'Simulate specific client(s): claude, cursor, chatgpt, antigravity')
   .option('-t, --transport <type>', 'Filter by transport: stdio or sse')
   .option('-v, --verbose', 'Show verbose output including raw responses')
   .option('--json', 'Output results as JSON')
@@ -155,7 +155,7 @@ program
     const suiteObject = {
       name: 'My MCP Server Cross-Client Test Suite',
       server: serverConfig,
-      clients: ['claude', 'cursor', 'chatgpt'],
+      clients: ['claude', 'cursor', 'chatgpt', 'antigravity'],
       tests: discoveredTests,
     };
 

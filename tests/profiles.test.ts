@@ -3,6 +3,7 @@ import {
   claudeProfile,
   cursorProfile,
   chatgptProfile,
+  antigravityProfile,
   getClientProfile,
 } from '../src/profiles/index.js';
 
@@ -85,6 +86,39 @@ describe('Client Profiles', () => {
       expect(args.order_id).toBe('4521');
       expect(typeof args.order_id).toBe('string');
       expect(args.count).toBe(5);
+    });
+  });
+
+  describe('Antigravity IDE Profile', () => {
+    it('retrieves Antigravity profile with correct clientInfo and capabilities', () => {
+      const profile = getClientProfile('antigravity');
+      expect(profile.displayName).toBe('Antigravity IDE');
+      expect(profile.clientInfo.name).toBe('antigravity-ide');
+      expect(profile.capabilities.roots?.listChanged).toBe(true);
+    });
+
+    it('preserves native typing and cleans undefined arguments', () => {
+      const schema = {
+        properties: {
+          order_id: { type: 'integer' },
+        },
+      };
+      const args = antigravityProfile.transformArguments('lookup_order', schema, {
+        order_id: 4521,
+        unwanted: undefined,
+      });
+      expect(args.order_id).toBe(4521);
+      expect(typeof args.order_id).toBe('number');
+      expect('unwanted' in args).toBe(false);
+    });
+
+    it('warns when tool lacks description for agentic routing', () => {
+      const res = antigravityProfile.validateToolDefinition!({
+        name: 'silent_tool',
+        description: '',
+      });
+      expect(res.valid).toBe(false);
+      expect(res.warning).toContain('Antigravity IDE agent routing requires a meaningful description');
     });
   });
 });

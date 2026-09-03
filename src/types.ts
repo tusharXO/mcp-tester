@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import { ClientCapabilities } from '@modelcontextprotocol/sdk/types.js';
 
-export type ClientType = 'claude' | 'cursor' | 'chatgpt';
+export type ClientType = 'claude' | 'cursor' | 'chatgpt' | 'antigravity';
+
+export const ClientEnum = z.enum(['claude', 'cursor', 'chatgpt', 'antigravity']);
 
 export interface ClientProfile {
   id: ClientType;
@@ -71,13 +73,13 @@ export const TestCaseSchema = z.object({
   expect_arguments: z.record(z.unknown()).default({}),
   expect_result: z.record(z.unknown()).optional(),
   expect_error: z.boolean().optional(),
-  skip_clients: z.array(z.enum(['claude', 'cursor', 'chatgpt'])).optional(),
+  skip_clients: z.array(ClientEnum).optional(),
 });
 
 export const TestSuiteSchema = z.object({
   name: z.string().default('MCP Test Suite'),
   server: ServerConfigSchema,
-  clients: z.array(z.enum(['claude', 'cursor', 'chatgpt'])).default(['claude', 'cursor', 'chatgpt']),
+  clients: z.array(ClientEnum).default(['claude', 'cursor', 'chatgpt', 'antigravity']),
   tests: z.array(TestCaseSchema),
 });
 
